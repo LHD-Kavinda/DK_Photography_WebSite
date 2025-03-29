@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Comment Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+  
+ 
+  <style>
+    /* Font styling */
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      
+      color: #0b0a0a;
+      background-image: url(bgphoto.jpg);
+      
+    }
+
+    /* Form styling */
+    form {
+      width: 400px;
+      margin: 0 auto;
+      background-color: rgb(114, 202, 201);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0px 20px 20px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      box-shadow: inset 0px 5px 5px 0px rgb(182, 182, 182);
+    }
+
+    .Submit {
+      position:relative;
+      top:30px;
+      right: 0px;
+      background-color: #a50c77;
+      border-radius: 100px;
+      padding: 10px 130px;
+      
+      
+    }
+
+    .Submit:hover {
+      background-color: #006666;
+    }
+
+    /* Comment styling */
+    
+
+    .comment-box {
+      border-radius: 10px;
+      background-color: #c2f18f;
+      padding: 10px;
+      margin: 10px 100px 20px;
+      position:relative;
+    }
+
+    .comment-box p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .comment-box strong {
+      font-weight: bold;
+    }
+
+    .delete-button {
+      position: absolute;
+      top: 30px;
+      right: 5px;
+      background-color: #da766b;
+      border: none;
+      border-radius: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-weight: bold;
+      
+    }
+
+    .delete-button:hover {
+      background-color: #ca1f0c;
+    }
+
+    .Comments_text{
+      color: #a50c77;
+      background-color: #ecf8fc;
+      border-radius: 20%;
+
+    }
+  </style>
+</head>
+<body class="body-main">
+  <header>
+    <div class="header-content">
+      <img src="DK Photography Logo1.png" width="auto" height="50px">
+      <nav>
+        <ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="index_1.html">Category</a></li>
+			<li><a href="index_2.html">About</a></li>
+			<li><a href="form.html">Comments</a></li>
+			<li><a href="index_3.html">Contact</a></li>
+        </ul>
+      </nav>
+	  <span id="live-time"></span>
+    </div>
+  </header>
+  <br><br><br>
+  <div id="app">
+    <form v-on:submit.prevent="addComment">
+      <div id="comment-form">
+        <h2 align="center">Add a Comment</h2>
+        <form v-on:submit.prevent="addComment">
+          <label for="name">Name:</label>
+          <input type="text" id="name" v-model="name" required><br><br>
+          <label for="comment">Comment:</label>
+          <textarea id="comment" v-model="comment" required></textarea>
+          <div class="Submit">
+          <button type="submit">Add Comment</button> </div>
+        </form>
+      </div>
+      <div v-if="comments.length > 0">
+        <div class="Comments_text">
+        <h2 align="center">Comments</h2> </div>
+        <div v-for="(comment, index) in comments" :key="index" class="comment-box">
+          <p><strong>{{ comment.name }}</strong><br>{{ comment.comment }}</p>
+          <div class="delete-button">
+          <button v-on:click="deleteComment(index)">Delete</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        name: '',
+        comment: '',
+        comments: JSON.parse(localStorage.getItem('comments') || '[]')
+      },
+      methods: {
+        addComment: function() {
+          if (this.name && this.comment) {
+            this.comments.push({
+              name: this.name,
+              comment: this.comment
+            });
+            localStorage.setItem('comments', JSON.stringify(this.comments));
+            this.name = '';
+            this.comment = '';
+          } else {
+            alert('Please fill out all fields');
+          }
+        },
+        deleteComment: function(index) {
+          this.comments.splice(index, 1);
+          localStorage.setItem('comments', JSON.stringify(this.comments));
+        }
+      }
+    });
+  </script>
+</body>
+</html>
